@@ -9,7 +9,7 @@ import { getFirestore, collection, doc, addDoc, getDocs, setDoc, deleteDoc, quer
 
 // 👇 PEGA AQUÍ TU CONFIG DE FIREBASE (ver guía de instalación)
 const firebaseConfig = {
-apiKey: "AIzaSyDEOLsAXD5xG-PA1KBEqETrJXvBU2SLK3M",
+    apiKey: "AIzaSyDEOLsAXD5xG-PA1KBEqETrJXvBU2SLK3M",
     authDomain: "mis-finanzasnr.firebaseapp.com",
     projectId: "mis-finanzasnr",
     storageBucket: "mis-finanzasnr.firebasestorage.app",
