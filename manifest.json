@@ -2,7 +2,7 @@
   "name": "Mis Finanzas RD",
   "short_name": "Finanzas",
   "description": "Control completo de tus finanzas personales en pesos dominicanos",
-  "start_url": "/Mis-FinanzasNR/",
+  "start_url": "//mis-finanzas-rd/index.html/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#1D9E75",
