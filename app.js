@@ -11,7 +11,7 @@ import { getFirestore, collection, doc, addDoc, getDocs, setDoc, deleteDoc, quer
 const firebaseConfig = {
     apiKey: "AIzaSyDEOLsAXD5xG-PA1KBEqETrJXvBU2SLK3M",
     authDomain: "mis-finanzasnr.firebaseapp.com",
-    projectId: "mis-finanzasnr",
+    projectId: "Mis-finanzasNR",
     storageBucket: "mis-finanzasnr.firebasestorage.app",
     messagingSenderId: "443527351811",
     appId: "1:443527351811:web:6d6f10b24877dad9718836",
