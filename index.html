@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#1D9E75">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Mis Finanzas">
+  <title>Mis Finanzas RD</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">💰</div>
+    <h1>Mis Finanzas RD</h1>
+    <p>Controla tu dinero con inteligencia</p>
+    <button id="btn-google" onclick="loginGoogle()">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Entrar con Google
+    </button>
+    <div id="login-error" class="login-error"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" style="display:none;">
+
+  <div class="top-bar">
+    <div>
+      <h1 id="screen-title">Resumen</h1>
+      <div class="period" id="screen-period">Cargando...</div>
+    </div>
+    <div class="top-actions">
+      <span id="user-avatar" class="avatar"></span>
+      <button class="icon-btn" onclick="logout()" title="Cerrar sesión">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="screen active" id="s-dashboard">
+    <div class="metric-row">
+      <div class="metric-card wide teal">
+        <div class="label">Saldo disponible</div>
+        <div class="value" id="d-saldo">RD$ 0</div>
+        <div class="sub">Ingresos − Gastos del mes</div>
+      </div>
+    </div>
+    <div class="metric-row">
+      <div class="metric-card coral">
+        <div class="label">Gastos del mes</div>
+        <div class="value" id="d-gastos">RD$ 0</div>
+        <div class="sub" id="d-gastos-sub">Este mes</div>
+      </div>
+      <div class="metric-card green">
+        <div class="label">Ingresos del mes</div>
+        <div class="value" id="d-ingresos">RD$ 0</div>
+        <div class="sub">Este mes</div>
+      </div>
+    </div>
+    <div class="metric-row">
+      <div class="metric-card blue">
+        <div class="label">Total ahorros</div>
+        <div class="value" id="d-ahorros">RD$ 0</div>
+        <div class="sub">Todas las cuentas</div>
+      </div>
+      <div class="metric-card purple">
+        <div class="label">Total inversiones</div>
+        <div class="value" id="d-inversiones">RD$ 0</div>
+        <div class="sub">Portafolio</div>
+      </div>
+    </div>
+
+    <div class="section-title">Gastos por categoría</div>
+    <div class="card" id="cat-summary-list"><div class="empty-state">Agrega tu primer gasto ↓</div></div>
+
+    <div class="section-title">Últimos movimientos</div>
+    <div class="card" id="recent-list"><div class="empty-state">Sin movimientos aún</div></div>
+
+    <div class="ai-card" id="ai-insight-card" style="display:none;">
+      <div class="ai-label">✨ Análisis IA</div>
+      <div class="ai-text" id="ai-insight-text"></div>
+    </div>
+    <button class="insight-btn" onclick="getAIInsight()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+      Analizar mis finanzas con IA
+    </button>
+  </div>
+
+  <!-- GASTOS -->
+  <div class="screen" id="s-gastos">
+    <div class="tabs">
+      <button class="active" onclick="setGastoFiltro('mes',this)">Este mes</button>
+      <button onclick="setGastoFiltro('semana',this)">Esta semana</button>
+      <button onclick="setGastoFiltro('todo',this)">Todo</button>
+    </div>
+    <div class="card" style="padding:16px;margin-bottom:12px;">
+      <div style="font-size:11px;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em;">Distribución de gastos</div>
+      <div style="position:relative;width:100%;height:200px;"><canvas id="chart-donut"></canvas></div>
+    </div>
+    <div class="section-title">Movimientos</div>
+    <div class="card" id="all-mov-list"><div class="empty-state">Sin movimientos aún</div></div>
+  </div>
+
+  <!-- PRESUPUESTO -->
+  <div class="screen" id="s-presupuesto">
+    <div class="metric-row">
+      <div class="metric-card coral">
+        <div class="label">Gastado</div>
+        <div class="value" id="p-gastado">RD$ 0</div>
+      </div>
+      <div class="metric-card teal">
+        <div class="label">Disponible</div>
+        <div class="value" id="p-disponible">RD$ 0</div>
+      </div>
+    </div>
+    <div class="section-title">
+      Categorías
+      <button class="small-btn" onclick="openBudgetModal()">Editar límites</button>
+    </div>
+    <div class="card" id="budget-list"><div class="empty-state">Cargando...</div></div>
+    <button class="insight-btn" onclick="getAIBudgetTip()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Sugerencias de ahorro con IA
+    </button>
+    <div class="ai-card" id="ai-budget-card" style="display:none;">
+      <div class="ai-label">✨ Sugerencias IA</div>
+      <div class="ai-text" id="ai-budget-text"></div>
+    </div>
+  </div>
+
+  <!-- CUENTAS -->
+  <div class="screen" id="s-cuentas">
+    <div class="section-title">
+      Tarjetas y cuentas
+      <button class="small-btn" onclick="openCuentaModal()">+ Agregar</button>
+    </div>
+    <div class="card" id="cuentas-list"><div class="empty-state">Agrega tus cuentas y tarjetas</div></div>
+
+    <div class="section-title">
+      Inversiones
+      <button class="small-btn" onclick="openInversionModal()">+ Agregar</button>
+    </div>
+    <div class="card" id="inversiones-list"><div class="empty-state">Agrega tus inversiones</div></div>
+
+    <div class="section-title">Crecimiento histórico</div>
+    <div class="card" style="padding:16px;">
+      <div style="position:relative;width:100%;height:200px;"><canvas id="chart-growth"></canvas></div>
+    </div>
+  </div>
+
+  <!-- FAB -->
+  <button class="fab" onclick="openModal()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <button class="active" onclick="goTo('dashboard',this,'Resumen')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Inicio
+    </button>
+    <button onclick="goTo('gastos',this,'Gastos')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      Gastos
+    </button>
+    <button onclick="goTo('presupuesto',this,'Presupuesto')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M9 12h6M9 16h4"/></svg>
+      Presupuesto
+    </button>
+    <button onclick="goTo('cuentas',this,'Cuentas')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      Cuentas
+    </button>
+  </nav>
+
+</div>
+
+<!-- MODAL AGREGAR MOVIMIENTO -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h2>Agregar movimiento</h2>
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <button id="type-gasto" class="type-btn active" onclick="setType('gasto',this)">💸 Gasto</button>
+      <button id="type-ingreso" class="type-btn" onclick="setType('ingreso',this)">💰 Ingreso</button>
+    </div>
+    <label>Monto (RD$)</label>
+    <input type="number" id="m-monto" placeholder="0.00" inputmode="decimal">
+    <label>Descripción</label>
+    <input type="text" id="m-desc" placeholder="Ej: Supermercado La Sirena">
+    <label>Categoría</label>
+    <div class="cat-grid" id="cat-grid"></div>
+    <label>Fecha</label>
+    <input type="date" id="m-fecha">
+    <label>Notas (opcional)</label>
+    <input type="text" id="m-notas" placeholder="Ej: Con tarjeta Popular">
+    <button class="btn-primary" onclick="saveMovement()">Guardar</button>
+    <button class="btn-cancel" onclick="closeModal('modal-bg')">Cancelar</button>
+  </div>
+</div>
+
+<!-- MODAL PRESUPUESTO -->
+<div class="modal-bg" id="budget-modal-bg">
+  <div class="modal">
+    <h2>Límites de presupuesto</h2>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;">Define cuánto quieres gastar por categoría cada mes.</p>
+    <div id="budget-form"></div>
+    <button class="btn-primary" onclick="saveBudgets()">Guardar límites</button>
+    <button class="btn-cancel" onclick="closeModal('budget-modal-bg')">Cancelar</button>
+  </div>
+</div>
+
+<!-- MODAL CUENTA -->
+<div class="modal-bg" id="cuenta-modal-bg">
+  <div class="modal">
+    <h2>Agregar cuenta / tarjeta</h2>
+    <label>Nombre</label>
+    <input type="text" id="c-nombre" placeholder="Ej: Tarjeta Popular Visa">
+    <label>Tipo</label>
+    <select id="c-tipo">
+      <option value="ahorro">Cuenta de ahorro</option>
+      <option value="corriente">Cuenta corriente</option>
+      <option value="tarjeta">Tarjeta de crédito</option>
+    </select>
+    <label>Saldo / Balance (RD$)</label>
+    <input type="number" id="c-saldo" placeholder="0">
+    <div id="c-limite-row">
+      <label>Límite de crédito (RD$)</label>
+      <input type="number" id="c-limite" placeholder="0">
+    </div>
+    <button class="btn-primary" onclick="saveCuenta()">Guardar cuenta</button>
+    <button class="btn-cancel" onclick="closeModal('cuenta-modal-bg')">Cancelar</button>
+  </div>
+</div>
+
+<!-- MODAL INVERSION -->
+<div class="modal-bg" id="inversion-modal-bg">
+  <div class="modal">
+    <h2>Agregar inversión</h2>
+    <label>Nombre</label>
+    <input type="text" id="i-nombre" placeholder="Ej: JMMB Fondo Mutuo">
+    <label>Tipo</label>
+    <select id="i-tipo">
+      <option value="fondo">Fondo mutuo</option>
+      <option value="certificado">Certificado financiero</option>
+      <option value="acciones">Acciones</option>
+      <option value="crypto">Crypto</option>
+      <option value="otro">Otro</option>
+    </select>
+    <label>Monto invertido (RD$)</label>
+    <input type="number" id="i-monto" placeholder="0">
+    <label>Rendimiento anual estimado (%)</label>
+    <input type="number" id="i-rendimiento" placeholder="Ej: 12">
+    <button class="btn-primary" onclick="saveInversion()">Guardar inversión</button>
+    <button class="btn-cancel" onclick="closeModal('inversion-modal-bg')">Cancelar</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
